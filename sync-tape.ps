@@ -1,0 +1,32 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 0 0 576 792
+%
+/mm { 72 25.4 div mul } def
+/" { 72 mul } def
+
+/line-dist 0.8 mm def
+/tape-width 1 " def
+
+/offset-x 12 mm def
+/offset-y 20 mm def
+
+line-dist 2 div setlinewidth
+
+/height 11 " offset-y 2 mul sub def
+/width 8 " offset-x 2 mul sub def
+
+
+0 1 height line-dist div {
+    line-dist mul offset-y add offset-x exch moveto
+    width 0 rlineto
+    stroke
+} for
+
+0 1 width tape-width div {
+    tape-width mul offset-x add dup
+    10 moveto
+    0 offset-y 2 div rlineto stroke
+    height offset-y 2 mul add 10 sub moveto
+    0 offset-y 2 div neg rlineto stroke
+} for
+showpage
