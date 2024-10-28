@@ -2,16 +2,13 @@
 
 PROJECT=glowtape
 
-BOOTLOADER_PARTIION=/dev/disk/by-label/RPI-RP2   # block device it shows up as.
-BOOTLOADER_MOUNT_DIR=/run/media/$(USER)/RPI-RP2  # where udisksctl mounts it.
-
 TOOLCHAIN_PREFIX=arm-none-eabi-
 
 build/$(PROJECT).uf2:
 
 flash : build/$(PROJECT).uf2
-	udisksctl mount -b $(BOOTLOADER_PARTIION)
-	cp $< $(BOOTLOADER_MOUNT_DIR) && sync
+	picotool load $<
+	picotool reboot
 
 build/$(PROJECT).uf2 build/$(PROJECT).elf: build FORCE
 	$(MAKE) -C build
@@ -22,7 +19,7 @@ disasm: build/$(PROJECT).elf
 	$(TOOLCHAIN_PREFIX)objdump -C -S build/$(PROJECT).elf
 
 build:
-	cmake -B build -DCMAKE_VERBOSE_MAKEFILE=ON
+	cmake -B build -DCMAKE_VERBOSE_MAKEFILE=OFF -DPICO_BOARD=adafruit_feather_rp2040
 
 clean:
 	rm -rf build

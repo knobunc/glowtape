@@ -4,17 +4,17 @@
 
 { pkgs ? import <nixpkgs> {} }:
 let
-  # Needs to be synced past
-  # https://github.com/NixOS/nixpkgs/pull/321786
-  local-pico-sdk = pkgs.pico-sdk.override {
+  local-pico-sdk = pkgs.pico-sdk.overrideAttrs (oldAttrs: {
      withSubmodules = true;
-  };
+     #version = "1.5.1";
+  });
 in
 pkgs.mkShell {
   buildInputs = with pkgs;
     [
       gcc-arm-embedded
       local-pico-sdk
+      picotool
       cmake python3   # build requirements for pico-sdk
 
       openscad-unstable
