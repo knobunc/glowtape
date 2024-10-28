@@ -28,7 +28,7 @@ pkgs.mkShell {
       python312Packages.kicad
       zip
       pcb2gcode
-
+      pstoedit
     ];
   shellHook = ''
    export PICO_SDK_PATH=${local-pico-sdk}/lib/pico-sdk
