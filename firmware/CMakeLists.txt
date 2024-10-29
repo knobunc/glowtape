@@ -23,6 +23,7 @@ add_executable(${PROJECT_NAME}
 # Create map/bin/hex/uf2 files
 pico_add_extra_outputs(${PROJECT_NAME})
 
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Werror)
 # Link to pico_stdlib (gpio, time, etc. functions)
 target_link_libraries(${PROJECT_NAME}
   pico_stdlib

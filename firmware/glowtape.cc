@@ -1,25 +1,34 @@
 #include <bit>
 #include <algorithm>
-#include <functional>
 #include <cstdint>
 #include <cstdio>
 
 #include "hardware/gpio.h"
-#include "hardware/i2c.h"
 #include "hardware/spi.h"
+
 #include "pico/stdlib.h"
 
-constexpr int kRotationEncoderSDAPin = 26;
-constexpr int kSpiTxPin = 7;
+
+constexpr int kSpiTxPin = 11;  // TX1, 10=sck1, 9=CS1
+constexpr uint16_t kFlashTimeMillis = 10;
 
 enum class ScreenAspect {
   kAlongWidth,  // X axis along width; (0, 0) at top left after full pull.
   kAlongLength, // X axis along length; (0, 0) first in pull, at top.
 };
 
+// Sequence
+//  StartNewImage();
+//  SetPixel()...
+//  for (SendStart(); SendNext(); /**/) {
+//    WaitForSync();
+//    LighFlash(flashmillis);
+//  }
+//
 template <typename RowBits_t, int kMaxRows>
 class FramePrinter {
-  static constexpr uint8_t kStrobePin = 3;
+  static constexpr uint8_t kLightFlashPin = 8;
+  static constexpr uint8_t kEvenOddLineOffset = 4;
 public:
   FramePrinter(int spiTxPin, spi_inst_t *instance) : instance_(instance) {
     spi_init(instance_, 1'000'000);
@@ -28,28 +37,42 @@ public:
                    spi_cpha_t::SPI_CPHA_1, // phase
                    spi_order_t::SPI_MSB_FIRST);
     // Luckily, the RP2040 has pin-muxing pretty standardized and we can derive
-    // the remaining pins from just one pin.
+    // the remaining pins from just knowing one pin.
     const int spiSckPin = spiTxPin - 1;
-    const int spiCsPin = spiTxPin - 2;
+    const int spiCsPin = spiTxPin - 2;   // Also called 'latch' on glowxels
     gpio_set_function(spiTxPin, GPIO_FUNC_SPI);
     gpio_set_function(spiSckPin, GPIO_FUNC_SPI);
     gpio_set_function(spiCsPin, GPIO_FUNC_SPI);
 
-    gpio_init(kStrobePin);
-    gpio_set_dir(kStrobePin, GPIO_OUT);
-    gpio_put(kStrobePin, true); // ~OE
+    gpio_init(kLightFlashPin);
+    gpio_set_dir(kLightFlashPin, GPIO_OUT);
+    gpio_put(kLightFlashPin, true); // ~OE
   }
 
-  void SendLine(RowBits_t value) {
-    // rp2040 stores things in LE, but we
-    RowBits_t big_endian = std::byteswap(value);  // rp2040 is LE
-    spi_write_blocking(instance_, (uint8_t*)&big_endian, sizeof(big_endian));
+  // Start sending the new
+  void SendStart() {
+    send_pos_ = row_end_ - 1;
+    if (send_pos_ >= kMaxRows - kEvenOddLineOffset) return;
+    // We want to start the line offset earlier to cover all the bits.
+    for (uint8_t i=0; i < kEvenOddLineOffset; ++i) {
+      row_[++send_pos_] = 0;
+    }
   }
 
-  void Strobe(uint16_t milliseconds) {
-    gpio_put(kStrobePin, false); // ~OE
+  // Send next line. Can be done independently of actually flashing the light.
+  // Returns 'true' if there is more to send.
+  bool SendNext() {
+    if (send_pos_ < 0) return false;
+    printf("%d\n", send_pos_);
+    SendData(assembleLedDataAt(send_pos_));
+    --send_pos_;
+    return true;
+  }
+
+  void LightFlash(uint16_t milliseconds) {
+    gpio_put(kLightFlashPin, false); // ~OE
     sleep_ms(milliseconds);
-    gpio_put(kStrobePin, true);
+    gpio_put(kLightFlashPin, true);
   }
 
   void StartNewImage(ScreenAspect type) {
@@ -61,6 +84,7 @@ public:
     row_end_ = 0;
   }
 
+  // Set pixel on (x,y); interpreted in the context of Screenaspect
   void SetPixel(int x, int y, bool on = true) {
     constexpr int kMaxColumns = sizeof(RowBits_t) * 8;
     if (aspect_type_ == ScreenAspect::kAlongLength) {
@@ -87,57 +111,108 @@ public:
 
   void push_back(RowBits_t row_bits) {
     if (row_end_ >= kMaxRows) return;
-    row_[++row_end_] = row_bits;
+    row_[row_end_++] = row_bits;
   }
 
   size_t size() const { return row_end_; }
 
 private:
+  void SendData(RowBits_t value) {
+    // rp2040 stores things in LE, but we
+    RowBits_t big_endian = std::byteswap(value);  // rp2040 is LE
+    spi_write_blocking(instance_, (uint8_t*)&big_endian, sizeof(big_endian));
+  }
+
+  // Get column-offset and shift layoyt ready bits.
+  RowBits_t assembleLedDataAt(int row) {
+    return MapToPhysical(BitsAtRow(row));
+  }
+
+  RowBits_t BitsAtRow(int row) {
+    // Even/Odd Pixels are interleaved 4 rows apart.
+    RowBits_t result = row_[row] & 0x5555'5555'5555'5555;
+    if (row >= 4) result |= row_[row - 4] & 0xAAAA'AAAA'AAAA'AAAA;
+    return result;
+  }
+
+  // Physical mapping of 64 bits, mapped to the particular layout of the
+  // bits in the four 16-bit shift register to LEDs they end up at.
+  RowBits_t MapToPhysical(RowBits_t data) {
+    return (static_cast<RowBits_t>(MapChipBits(data >> 48)) << 48) |
+           (static_cast<RowBits_t>(MapChipBits(data >> 32)) << 32) |
+           (static_cast<RowBits_t>(MapChipBits(data >> 16)) << 16) |
+           (static_cast<RowBits_t>(MapChipBits(data >> 0)) << 0);
+  }
+
+  // Map data of one shift register chip to be from interleaved to the
+  // corresponding bits on the top and bottom.
+  constexpr uint16_t MapChipBits(uint16_t data) const {
+    // -- Led mapping of bits in shift-register vs. position.
+    constexpr uint8_t newpos[] = {
+      7, 8, 6, 9, 5, 10, 4, 11, 3, 12, 2, 13, 1, 14, 0, 15
+    };
+    // There is probably a delightful hackers bit-fiddling that can do this,
+    // but here pedestrian.
+    uint16_t result = 0;
+    for (uint8_t i = 0; i < 16; ++i) {
+      if (data & (1 << i)) result |= (1 << newpos[i]);
+    }
+    return result;
+  }
+
   RowBits_t row_[kMaxRows] = {0};
   int row_end_ = 0;  // like an end() iterator: the row beyond last.
   ScreenAspect aspect_type_ = ScreenAspect::kAlongWidth;
+
+  int send_pos_ = -1;
   spi_inst_t *const instance_;
 };
 
-class RotationalEncoder {
-  static constexpr uint8_t kAS5600Addr = 0x36;
-  static constexpr uint8_t kRawAngleAddress = 0x0c; // and 0x0d
-
+class StripEncoder {
 public:
-  RotationalEncoder(int pinSDA, i2c_inst_t *instance)
-    : instance_(instance) {
-    gpio_set_function(pinSDA, GPIO_FUNC_I2C);
-    gpio_set_function(pinSDA + 1, GPIO_FUNC_I2C);  // SCL is always offset + 1
-    i2c_init(instance_, 400000);
-  }
-
   uint16_t Value() {
-    uint8_t raw[2];
-    i2c_write_blocking(instance_, kAS5600Addr, &kRawAngleAddress, 1, false);
-    i2c_read_blocking(instance_, kAS5600Addr, raw, 2, false);
-    return (raw[0] << 8) | raw[1];
+    return counter_;
   }
 
 private:
-  i2c_inst_t *const instance_;
+  uint16_t counter_{0};
 };
 
-constexpr uint16_t operator""_bitmap(const char *str, size_t len) {
-  uint16_t result = 0;
+constexpr uint64_t operator""_bitmap(const char *str, size_t) {
+  uint64_t result = 0;
   for (/**/; *str; ++str) {
     result |= (*str != ' ');
-    result <<= 1;
+    result <<= static_cast<uint64_t>(1);
   }
   return result;
 }
 
 int main() {
   stdio_init_all(); // Init serial, such as uart or usb
-  RotationalEncoder encoder(kRotationEncoderSDAPin, i2c1);
-  FramePrinter<uint16_t, 1024> printer(kSpiTxPin, spi0);  // 0.8mm * 1024 ≈ 82cm
+
+  constexpr uint kLEDPin = 13;
+  gpio_init(kLEDPin);
+  gpio_set_dir(kLEDPin, GPIO_OUT);
+
+  //StripEncoder encoder;
+  FramePrinter<uint64_t, 1024> printer(kSpiTxPin, spi1);  // 0.8mm * 1024 ≈ 82cm
 
   printer.StartNewImage(ScreenAspect::kAlongWidth);
-  constexpr uint16_t kImage[] = {
+
+#if 0
+  printer.push_back(0xffff'ffff'0000'0000);
+  //printer.push_back(0x0000'0000'ffff'ffff);
+#endif
+
+#if 0
+  for (int i = 0; i < 64; ++i) {
+    printer.SetPixel(i, i);
+    //printer.SetPixel(63, i);
+  }
+#endif
+
+#if 1
+  constexpr uint64_t kImage[] = {
     "#      #      "_bitmap,
     "#      #      "_bitmap,
     "#      #      "_bitmap,
@@ -151,19 +226,21 @@ int main() {
     "# # # # # # # "_bitmap,
   };
 
-  for (uint16_t row : kImage) {
+  for (uint64_t row : kImage) {
     printer.push_back(row);
   }
   printer.at(0x0f) = 0;
+#endif
 
-  uint16_t last = 0;
-  for (uint8_t i;/**/;++i) {
-    const uint16_t value = encoder.Value();
-    const uint16_t diff = (value - last) & 0x0FFF;
-    last = value;
-    printf("Encoder-value %d diff: %d\n", value, diff);
-    printer.SendLine(printer.at(i % 16));
-    printer.Strobe(5);
+  for (uint8_t i=0;/**/;++i) {
+    //const uint16_t value = encoder.Value();
+    if (printer.SendNext()) {
+      printer.LightFlash(kFlashTimeMillis);
+    } else {
+      printer.SendStart();
+    }
+
     sleep_ms(100);
+    gpio_put(kLEDPin, i & 1);
   }
 }

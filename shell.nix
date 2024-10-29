@@ -4,10 +4,9 @@
 
 { pkgs ? import <nixpkgs> {} }:
 let
-  local-pico-sdk = pkgs.pico-sdk.overrideAttrs (oldAttrs: {
+  local-pico-sdk = pkgs.pico-sdk.override {
      withSubmodules = true;
-     #version = "1.5.1";
-  });
+  };
 in
 pkgs.mkShell {
   buildInputs = with pkgs;
