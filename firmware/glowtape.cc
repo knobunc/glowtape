@@ -8,7 +8,6 @@
 
 #include "pico/stdlib.h"
 
-
 constexpr int kSpiTxPin = 11;  // TX1, 10=sck1, 9=CS1
 constexpr uint16_t kFlashTimeMillis = 10;
 
@@ -169,13 +168,36 @@ private:
 };
 
 class StripEncoder {
+  static constexpr uint kLEDPin = 13;
+  static constexpr int kLineEncoderIn = 28;
 public:
+  StripEncoder() {
+    gpio_init(kLineEncoderIn);
+    gpio_set_dir(kLineEncoderIn, GPIO_IN);
+
+    // Debug output.
+    gpio_init(kLEDPin);
+    gpio_set_dir(kLEDPin, GPIO_OUT);
+  }
+
+  // Needs to be called regularly. TOOD: use interrupt ?
+  // Returns current counter.
+  void Poll() {
+    const bool current_read = gpio_get(kLineEncoderIn);
+    if (current_read && !last_read_) {  // Edge detected
+      ++counter_;
+    }
+    last_read_ = current_read;
+    gpio_put(kLEDPin, last_read_);
+  }
+
   uint16_t Value() {
     return counter_;
   }
 
 private:
   uint16_t counter_{0};
+  bool last_read_ = false;
 };
 
 constexpr uint64_t operator""_bitmap(const char *str, size_t) {
@@ -190,26 +212,10 @@ constexpr uint64_t operator""_bitmap(const char *str, size_t) {
 int main() {
   stdio_init_all(); // Init serial, such as uart or usb
 
-  constexpr uint kLEDPin = 13;
-  gpio_init(kLEDPin);
-  gpio_set_dir(kLEDPin, GPIO_OUT);
-
-  //StripEncoder encoder;
+  StripEncoder encoder;
   FramePrinter<uint64_t, 1024> printer(kSpiTxPin, spi1);  // 0.8mm * 1024 ≈ 82cm
 
   printer.StartNewImage(ScreenAspect::kAlongWidth);
-
-#if 0
-  printer.push_back(0xffff'ffff'0000'0000);
-  //printer.push_back(0x0000'0000'ffff'ffff);
-#endif
-
-#if 0
-  for (int i = 0; i < 64; ++i) {
-    printer.SetPixel(i, i);
-    //printer.SetPixel(63, i);
-  }
-#endif
 
 #if 1
   constexpr uint64_t kImage[] = {
@@ -232,15 +238,22 @@ int main() {
   printer.at(0x0f) = 0;
 #endif
 
-  for (uint8_t i=0;/**/;++i) {
-    //const uint16_t value = encoder.Value();
+  uint16_t last_value = 0;
+  for (uint8_t i = 0;/**/;++i) {
+    sleep_ms(1);
+    encoder.Poll();
+    const uint16_t value = encoder.Value();
+    const uint16_t diff = value - last_value;
+    last_value = value;
+    if (!diff) continue;
+    //printf("Encoder: %d %d\n", value, diff);
+
+#if 1
     if (printer.SendNext()) {
       printer.LightFlash(kFlashTimeMillis);
     } else {
       printer.SendStart();
     }
-
-    sleep_ms(100);
-    gpio_put(kLEDPin, i & 1);
+#endif
   }
 }
