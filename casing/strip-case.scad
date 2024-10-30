@@ -38,9 +38,9 @@ module usb() {
 }
 
 module rp2040_simple() {
-  translate([-51/2, 0, 0]) cube([51, 23, 1.8]);
+  translate([-50.8/2, 0, 0]) cube([50.8, 23, 4.8]);
   hull() {
-    translate([-22, 8.4, 3.28]) usb();  // actual location
+    translate([-22, 8.4, 3.1]) usb();  // actual location
     translate([-22, 8.4, 5]) usb();     // punch-out help
   }
 }
@@ -154,8 +154,8 @@ module base_case(len=top_len) {
 	translate([+20-7-3, 14.5, 0]) cube([7, 4, 5]);
 
 	// Side holders
-	translate([-5, 0, 0]) translate([len/2-5, back-13.5-2, 0]) cube([5, 13.5, 6]);
-	translate([-len/2, back-13.5-2, 0]) cube([6, 13.5, 6]);
+	translate([-5, 0, 0]) translate([len/2-5, back-8-2, 0]) cube([5, 8, 8]);
+	translate([-len/2, back-13.5-2, 0]) cube([6, 13.5, 8]);
 	translate([-len/2, -front_frame, 0]) cube([1.8, illuminator_len, 8]);
 	//translate([-len/2, illuminator_len-front_frame-1.5, 0]) cube([len, 1.5, 8]);
       }
@@ -221,9 +221,9 @@ module assembly() {
   translate([0, 0, window_elevate]) window();
 }
 
-assembly();
+//assembly();
 //base_case_print();
-//track();
+track();
 //pcb_arrangement();
 
 //translate([-tape_width/2, 0, 0]) side_wall();
