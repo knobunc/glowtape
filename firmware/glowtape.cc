@@ -168,8 +168,8 @@ private:
 };
 
 class StripEncoder {
-  static constexpr uint kLEDPin = 13;
-  static constexpr int kLineEncoderIn = 28;
+  static constexpr int kLEDPin = 13;
+  static constexpr int kLineEncoderIn = 7;
 public:
   StripEncoder() {
     gpio_init(kLineEncoderIn);
