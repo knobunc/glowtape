@@ -3,14 +3,14 @@
  * Font-File: 6x9.bdf
  *      Font: -Misc-Fixed-Medium-R-Normal--9-90-75-75-C-60-ISO10646-1
  *      Size: 9   Baseline at: 6
- * For chars: 0123456789 -/Monday Tuesday Wednesday Thursday Friday Saturday Sunday
+ * For chars: 0123456789 Set Time! -/Monday Tuesday Wednesday Thursday Friday Saturday Sunday
  */
 #ifndef FONT_6x9_
 #define FONT_6x9_
 
 #include "bdfont-support.h"
 
-/* font containing 30 characters */
+/* font containing 32 characters */
 extern const struct FontData PROGMEM font_6x9;
 
 #endif /* FONT_6x9_ */
