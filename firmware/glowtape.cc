@@ -6,8 +6,8 @@
 
 #include "hardware/gpio.h"
 #include "hardware/spi.h"
+#include "hardware/rtc.h"
 #include "pico/time.h"
-#include "pico/aon_timer.h"
 #include "pico/stdlib.h"
 
 #include "font-tinytext.h"
@@ -333,20 +333,53 @@ void CreateContent(FramePrinter *out, Content c) {
 
   out->StartNewImage(ScreenAspect::kAlongWidth);
 
-  switch (c) {
-  case kTime:
-    out->WriteText(&font_6x9, 62, 0, "Friday", true);
-    out->WriteText(&font_6x9, 2, 10, "2024 10 31");
-    out->WriteText(&font_timetext, 2, 22, "11:42");
-    break;
-  case kPicture:
+  if (c == kPicture) {
     for (uint64_t row : kImage) {
       out->push_back(row);
     }
+    return;
   }
+
+  datetime_t now;
+  rtc_get_datetime(&now);
+  const char *weekday = "-";
+  switch (now.dotw) {
+  case 0: weekday = "Sun"; break;
+  case 1: weekday = "Mon"; break;
+  case 2: weekday = "Tue"; break;
+  case 3: weekday = "Wed"; break;
+  case 4: weekday = "Thu"; break;
+  case 5: weekday = "Fri"; break;
+  case 6: weekday = "Sat"; break;
+  }
+  out->WriteText(&font_6x9, 62, 0, weekday, true);
+  char buffer[32];
+  snprintf(buffer, sizeof(buffer), "%4d %02d %02d", now.year, now.month, now.day);
+  out->WriteText(&font_6x9, 2, 10, buffer);
+
+  snprintf(buffer, sizeof(buffer), "%02d:%02d", now.hour, now.min);
+  out->WriteText(&font_timetext, 2, 22, buffer);
 }
+
+// TODO: setting time via serial interface
+void hardcodeTime() {
+    datetime_t t = {
+            .year  = 2024,
+            .month = 10,
+            .day   = 31,
+            .dotw  = 4, // 0 is Sunday, so 5 is Friday
+            .hour  = 11,
+            .min   = 52,
+            .sec   = 00
+    };
+    rtc_set_datetime(&t);
+}
+
 int main() {
   stdio_init_all(); // Init serial, such as uart or usb
+  rtc_init();
+
+  //hardcodeTime();  // ... until we have a serial interface UI
 
   gpio_set_dir(kButtonPin, GPIO_IN);
 

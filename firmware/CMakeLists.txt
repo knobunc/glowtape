@@ -32,7 +32,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Werror)
 target_link_libraries(${PROJECT_NAME}
   pico_stdlib
   pico_time
-  pico_aon_timer
+  hardware_rtc
   hardware_spi
 )
 
