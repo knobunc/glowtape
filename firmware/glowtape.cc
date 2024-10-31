@@ -10,6 +10,13 @@
 #include "pico/aon_timer.h"
 #include "pico/stdlib.h"
 
+#include "font-tinytext.h"
+#include "font-6x9.h"
+#include "font-timetext.h"
+#include "bdfont-support.h"
+
+constexpr int kButtonPin = 4;
+
 constexpr int kSpiTxPin = 11;  // TX1, 10=sck1, 9=CS1
 constexpr uint16_t kFlashTimeMillis = 5;
 
@@ -26,11 +33,12 @@ enum class ScreenAspect {
 //    LighFlash(flashmillis);
 //  }
 //
-template <typename RowBits_t, int kMaxRows>
 class FramePrinter {
+  static constexpr int kMaxRows = 1024;
   static constexpr uint8_t kLightFlashPin = 8;
   static constexpr uint8_t kEvenOddLineOffset = 4;
 public:
+  using RowBits_t = uint64_t;
   FramePrinter(int spiTxPin, spi_inst_t *instance) : instance_(instance) {
     spi_init(instance_, 1'000'000);
     spi_set_format(instance_, 8,           // Regylar 8 bits transfer
@@ -96,10 +104,11 @@ public:
     }
 
     RowBits_t &to_modify = at(y);
+    constexpr RowBits_t kLeftMostBit = static_cast<RowBits_t>(1) << 63;
     if (on) {
-      to_modify |= static_cast<RowBits_t>(1) << x;
+      to_modify |= kLeftMostBit >> x;
     } else {
-      to_modify &= ~(static_cast<RowBits_t>(1) << x);
+      to_modify &= ~(kLeftMostBit >> x);
     }
   }
 
@@ -116,6 +125,28 @@ public:
   }
 
   size_t size() const { return row_end_; }
+
+  void WriteText(const struct FontData *font,
+                 int xpos, int ypos, const char *print_text, bool right_aligned = false) {
+    if (right_aligned) {
+      for (const char *txt = print_text; *txt; ++txt) {
+        auto g = bdfont_find_glyph(font, *txt);
+        if (g) xpos -= g->width;
+      }
+    }
+    for (const char *txt = print_text; *txt; ++txt) {
+      int dx = 0;
+      xpos += BDFONT_EMIT_GLYPH(font, *txt, false,
+                                { dx = 0; },
+                                {
+                                  for (int i = 0; i < 8; ++i) {
+                                    SetPixel(xpos+dx, stripe * 8 + ypos + i, b & (1 << i));
+                                  }
+                                  ++dx;
+                                },
+                                {});
+    }
+  }
 
 private:
   void SendData(RowBits_t value) {
@@ -219,6 +250,7 @@ private:
   absolute_time_t last_tick_time_{};
 };
 
+
 constexpr uint64_t operator""_bitmap(const char *str, size_t) {
   uint64_t result = 0;
   for (/**/; *str; ++str) {
@@ -228,15 +260,11 @@ constexpr uint64_t operator""_bitmap(const char *str, size_t) {
   return result;
 }
 
-int main() {
-  stdio_init_all(); // Init serial, such as uart or usb
-
-  StripEncoder encoder;
-  FramePrinter<uint64_t, 1024> printer(kSpiTxPin, spi1);  // 0.8mm * 1024 ≈ 82cm
-
-  printer.StartNewImage(ScreenAspect::kAlongWidth);
-
-#if 0
+enum Content {
+  kTime,
+  kPicture,
+};
+void CreateContent(FramePrinter *out, Content c) {
   constexpr uint64_t kImage[] = {
       "                                                                "_bitmap,
       "                                                                "_bitmap,
@@ -302,47 +330,41 @@ int main() {
       "                                                                "_bitmap,
       "                                                                "_bitmap,
   };
-  for (uint64_t row : kImage) {
-    printer.push_back(row);
-  }
-#endif
 
-#if 1
-  constexpr uint64_t kImage[] = {
-      "                                                                "_bitmap,
-      "             xxx                         xxx                    "_bitmap,
-      "            x   x                       x   x                   "_bitmap,
-      "             xxx                         xxx                    "_bitmap,
-      "                                                                "_bitmap,
-      "                                                                "_bitmap,
-      "                           x                                    "_bitmap,
-      "                            x                                   "_bitmap,
-      "                             x                                  "_bitmap,
-      "                             x                                  "_bitmap,
-      "                             x                                  "_bitmap,
-      "          x                  x                                  "_bitmap,
-      "           x                 x                   x              "_bitmap,
-      "            x                                   x               "_bitmap,
-      "              x                               x                 "_bitmap,
-      "                x                            x                  "_bitmap,
-      "                  x                        x                    "_bitmap,
-      "                     xxx               xxxx                     "_bitmap,
-      "                        xxxx       xxx                          "_bitmap,
-      "                             xxxx                               "_bitmap,
-      "                                                                "_bitmap,
-  };
-  for (uint64_t row : kImage) {
-    printer.push_back(row);
+  out->StartNewImage(ScreenAspect::kAlongWidth);
+
+  switch (c) {
+  case kTime:
+    out->WriteText(&font_6x9, 62, 0, "Friday", true);
+    out->WriteText(&font_6x9, 2, 10, "2024 10 31");
+    out->WriteText(&font_timetext, 2, 22, "11:42");
+    break;
+  case kPicture:
+    for (uint64_t row : kImage) {
+      out->push_back(row);
+    }
   }
-#endif
+}
+int main() {
+  stdio_init_all(); // Init serial, such as uart or usb
+
+  gpio_set_dir(kButtonPin, GPIO_IN);
+
+  StripEncoder encoder;
+  FramePrinter printer(kSpiTxPin, spi1);  // 0.8mm * 1024 ≈ 82cm
 
   printer.SendStart();
+
+  bool button_pressed = false;
   int16_t fast_steps = 0;
   for (;;) {
+    button_pressed |= (!gpio_get(kButtonPin));  // Influence the next output.
     switch (encoder.Poll()) {
     case StripEncoder::Result::kFirstTick:
-      fast_steps = 0;
+      CreateContent(&printer, button_pressed ? kPicture : kTime);
       printer.SendStart();
+      fast_steps = 0;
+      button_pressed = false;
       break;
 
     case StripEncoder::Result::kFastTick:

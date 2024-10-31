@@ -17,7 +17,11 @@ pico_sdk_init()
 
 # Tell CMake where to find the executable source file
 add_executable(${PROJECT_NAME}
-    glowtape.cc
+  glowtape.cc
+  bdfont-support.c
+  font-tinytext.c
+  font-6x9.c
+  font-timetext.c
 )
 
 # Create map/bin/hex/uf2 files

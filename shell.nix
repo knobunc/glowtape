@@ -28,6 +28,7 @@ pkgs.mkShell {
       zip
       pcb2gcode
       pstoedit
+      otf2bdf
     ];
   shellHook = ''
    export PICO_SDK_PATH=${local-pico-sdk}/lib/pico-sdk
