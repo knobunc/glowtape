@@ -2,14 +2,16 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstdio>
+#include <pico/types.h>
 
 #include "hardware/gpio.h"
 #include "hardware/spi.h"
-
+#include "pico/time.h"
+#include "pico/aon_timer.h"
 #include "pico/stdlib.h"
 
 constexpr int kSpiTxPin = 11;  // TX1, 10=sck1, 9=CS1
-constexpr uint16_t kFlashTimeMillis = 10;
+constexpr uint16_t kFlashTimeMillis = 5;
 
 enum class ScreenAspect {
   kAlongWidth,  // X axis along width; (0, 0) at top left after full pull.
@@ -170,7 +172,17 @@ private:
 class StripEncoder {
   static constexpr int kLEDPin = 13;
   static constexpr int kLineEncoderIn = 7;
+  static constexpr int64_t kTimeoutUsec = 500'000;
+  static constexpr int64_t kFastTickUsec = 10'000;
+
 public:
+  enum class Result {
+    kFirstTick,  // First tick after idle for a while
+    kNoTick,     // No change detected
+    kFastTick,   // Tick since last seen, but was very fast.
+    kTick,       // change since last
+  };
+
   StripEncoder() {
     gpio_init(kLineEncoderIn);
     gpio_set_dir(kLineEncoderIn, GPIO_IN);
@@ -180,24 +192,31 @@ public:
     gpio_set_dir(kLEDPin, GPIO_OUT);
   }
 
-  // Needs to be called regularly. TOOD: use interrupt ?
-  // Returns current counter.
-  void Poll() {
+  // Needs to be called regularly.
+  Result Poll() {
     const bool current_read = gpio_get(kLineEncoderIn);
-    if (current_read && !last_read_) {  // Edge detected
-      ++counter_;
-    }
+    const bool edge_detected = current_read && !last_read_;
     last_read_ = current_read;
-    gpio_put(kLEDPin, last_read_);
-  }
 
-  uint16_t Value() {
-    return counter_;
+    if (!edge_detected) return Result::kNoTick;
+
+    const absolute_time_t this_tick_time = get_absolute_time();
+    const int64_t usec_diff = absolute_time_diff_us(last_tick_time_,
+                                                    this_tick_time);
+    last_tick_time_ = this_tick_time;
+
+    if (usec_diff < kFastTickUsec) {
+      gpio_put(kLEDPin, true);
+      return Result::kFastTick;
+    }
+    gpio_put(kLEDPin, false);
+    if (usec_diff > kTimeoutUsec) return Result::kFirstTick;
+    return Result::kTick;
   }
 
 private:
-  uint16_t counter_{0};
   bool last_read_ = false;
+  absolute_time_t last_tick_time_{};
 };
 
 constexpr uint64_t operator""_bitmap(const char *str, size_t) {
@@ -218,27 +237,6 @@ int main() {
   printer.StartNewImage(ScreenAspect::kAlongWidth);
 
 #if 0
-  constexpr uint64_t kImage[] = {
-    "#      #      "_bitmap,
-    "#      #      "_bitmap,
-    "#      #      "_bitmap,
-    "#      #      "_bitmap,
-    "############# "_bitmap,
-    "#      #   #  "_bitmap,
-    "#      #  #   "_bitmap,
-    "#      # #    "_bitmap,
-    "#      ###### "_bitmap,
-    "              "_bitmap,
-    "# # # # # # # "_bitmap,
-  };
-
-  for (uint64_t row : kImage) {
-    printer.push_back(row);
-  }
-  printer.at(0x0f) = 0;
-#endif
-
-#if 1
   constexpr uint64_t kImage[] = {
       "                                                                "_bitmap,
       "                                                                "_bitmap,
@@ -309,19 +307,57 @@ int main() {
   }
 #endif
 
-  uint16_t last_value = 0;
-  for (;;) {
-    sleep_ms(1);
-    encoder.Poll();
-    const uint16_t value = encoder.Value();
-    const uint16_t diff = value - last_value;
-    last_value = value;
-    if (!diff) continue;
+#if 1
+  constexpr uint64_t kImage[] = {
+      "                                                                "_bitmap,
+      "             xxx                         xxx                    "_bitmap,
+      "            x   x                       x   x                   "_bitmap,
+      "             xxx                         xxx                    "_bitmap,
+      "                                                                "_bitmap,
+      "                                                                "_bitmap,
+      "                           x                                    "_bitmap,
+      "                            x                                   "_bitmap,
+      "                             x                                  "_bitmap,
+      "                             x                                  "_bitmap,
+      "                             x                                  "_bitmap,
+      "          x                  x                                  "_bitmap,
+      "           x                 x                   x              "_bitmap,
+      "            x                                   x               "_bitmap,
+      "              x                               x                 "_bitmap,
+      "                x                            x                  "_bitmap,
+      "                  x                        x                    "_bitmap,
+      "                     xxx               xxxx                     "_bitmap,
+      "                        xxxx       xxx                          "_bitmap,
+      "                             xxxx                               "_bitmap,
+      "                                                                "_bitmap,
+  };
+  for (uint64_t row : kImage) {
+    printer.push_back(row);
+  }
+#endif
 
-    if (printer.SendNext()) {
-      printer.LightFlash(kFlashTimeMillis);
-    } else {
+  printer.SendStart();
+  int16_t fast_steps = 0;
+  for (;;) {
+    switch (encoder.Poll()) {
+    case StripEncoder::Result::kFirstTick:
+      fast_steps = 0;
       printer.SendStart();
+      break;
+
+    case StripEncoder::Result::kFastTick:
+      ++fast_steps;
+      [[fallthrough]];
+
+    case StripEncoder::Result::kTick:
+      if (printer.SendNext() && fast_steps < 4) {
+        printer.LightFlash(kFlashTimeMillis);
+      }
+      break;
+
+    case StripEncoder::Result::kNoTick:
+      // Nothing to do.
+      break;
     }
   }
 }

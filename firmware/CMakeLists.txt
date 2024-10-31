@@ -27,6 +27,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Werror)
 # Link to pico_stdlib (gpio, time, etc. functions)
 target_link_libraries(${PROJECT_NAME}
   pico_stdlib
+  pico_time
+  pico_aon_timer
   hardware_spi
 )
 

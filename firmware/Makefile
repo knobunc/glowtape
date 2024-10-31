@@ -3,6 +3,7 @@
 PROJECT=glowtape
 
 TOOLCHAIN_PREFIX=arm-none-eabi-
+BOARD=adafruit_feather_rp2040
 
 build/$(PROJECT).uf2:
 
@@ -19,7 +20,7 @@ disasm: build/$(PROJECT).elf
 	$(TOOLCHAIN_PREFIX)objdump -C -S build/$(PROJECT).elf
 
 build:
-	cmake -B build -DCMAKE_VERBOSE_MAKEFILE=OFF -DPICO_BOARD=adafruit_feather_rp2040
+	cmake -B build -DCMAKE_VERBOSE_MAKEFILE=OFF -DPICO_BOARD=$(BOARD)
 
 clean:
 	rm -rf build
