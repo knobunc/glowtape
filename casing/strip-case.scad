@@ -4,14 +4,14 @@ $fn=60;
 e=0.01;
 
 top_len=59;
-window_width=54;
+window_width=53.9;
 window_elevate=1+e;
-bottom_thick=3;
+
 tape_width=50.3;
 tape_thick=0.25;
 extra_width=6;
 
-track_thick=2.5;
+track_thick=3;
 acrylic_len=40;
 front_frame=2;
 illuminator_len=28 + front_frame;
@@ -28,6 +28,14 @@ module rounded_cube(w=20, h=10, thick=1, r=0.5) {
     translate([-dx, -dy, 0]) cylinder(r=r, h=thick);
     translate([-dx, +dy, 0]) cylinder(r=r, h=thick);
   }
+}
+
+module pocket_cube(c, r=0.3) {
+  cube(c);
+  cylinder(r=r, h=c[2]);
+  translate([c[0], 0, 0]) cylinder(r=r, h=c[2]);
+  translate([c[0], c[1], 0]) cylinder(r=r, h=c[2]);
+  translate([0, c[1], 0]) cylinder(r=r, h=c[2]);
 }
 
 module usb() {
@@ -84,13 +92,14 @@ module strip_led_light() {
 }
 
 module strip_sensor() {
-  w=19.4;
-  h=7.2;
-  translate([-w/2, -h/2, -2]) cube([w, h, 3]);
+  w=19.7;
+  h=7.4;
+  translate([-w/2, -h/2, -2.7]) pocket_cube([w, h, 3]);  // hollow
+  // bottom retainer
   translate([-(w-1)/2, -(h-1)/2, -track_thick-e]) cube([w-1, h-1, track_thick]);
-  translate([w/2-e, -(h-1)/2, -1]) cube([2, h-1, 3]);  // Cable
+  translate([w/2-e, -(h-1)/2, -1.5]) cube([2, h-1, 3]);  // Cable extract
   fudge_len=tape_width/2-1;
-  translate([w/2-e, -2.5/2, -1]) cube([fudge_len, 2.5, 6]);  // Cable
+  translate([w/2-e, -2.5/2, -1]) cube([fudge_len, 2.5, 6]);  // Cable channel
 }
 
 module battery() {
@@ -205,7 +214,7 @@ module track_frame() {
 module track() {
   difference() {
     track_frame();
-    translate([0, 0, tape_thick]) base_case_bottom(height=10, extra=0.3);
+    translate([0, 0, tape_thick]) base_case_bottom(height=10, extra=0.4);
     translate([0, 0, window_elevate]) window(punch=1);
     sensor_locator() translate([0, front_frame, 0]) strip_sensor();
   }
