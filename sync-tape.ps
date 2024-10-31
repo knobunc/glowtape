@@ -5,25 +5,26 @@
 /" { 72 mul } def
 
 /line-dist 0.8 mm def
-/tape-width 1 " def
+/cut-marks 55 mm def
 
 /offset-x 12 mm def
 /offset-y 20 mm def
 
-line-dist 2 div setlinewidth
+line-dist 0.5 mul setlinewidth
 
 /height 11 " offset-y 2 mul sub def
 /width 8 " offset-x 2 mul sub def
 
-
+% sync line pattern
 0 1 height line-dist div {
     line-dist mul offset-y add offset-x exch moveto
     width 0 rlineto
     stroke
 } for
 
-0 1 width tape-width div {
-    tape-width mul offset-x add dup
+% cut marks
+0 1 width cut-marks div {
+    cut-marks mul offset-x add dup
     10 moveto
     0 offset-y 2 div rlineto stroke
     height offset-y 2 mul add 10 sub moveto
