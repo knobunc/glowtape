@@ -21,11 +21,12 @@ constexpr uint16_t kFlashTimeMillis = 5;
 
 static void WriteText(FramePrinter *out, const struct FontData *font, int xpos,
                       int ypos, const char *print_text,
-                      bool right_aligned = false) {
+                      bool right_aligned = false, int extra_space = 0) {
   if (right_aligned) {
     for (const char *txt = print_text; *txt; ++txt) {
       auto g = bdfont_find_glyph(font, *txt);
       if (g) xpos -= g->width;
+      xpos -= extra_space;
     }
   }
   for (const char *txt = print_text; *txt; ++txt) {
@@ -39,6 +40,7 @@ static void WriteText(FramePrinter *out, const struct FontData *font, int xpos,
           ++dx;
         },
         {});
+    xpos += extra_space;
   }
 }
 
@@ -136,8 +138,8 @@ void CreateContent(FramePrinter *out, int what_content) {
   }
 
   if (what_content == kName) {
-    WriteText(out, &font_message, 2, 0, "Henner");
-    WriteText(out, &font_message, 62, 15, "Zeller", true);
+    WriteText(out, &font_message, 2, 0, "Henner", false, 2);
+    WriteText(out, &font_message, 62, 15, "Zeller", true, 2);
     return;
   }
 
