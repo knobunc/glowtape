@@ -58,8 +58,8 @@ constexpr uint64_t operator""_bitmap(const char *str, size_t) {
 void CreateContent(FramePrinter *out, int what_content) {
   enum Content {
     kTime,
-    kPicture,
     kName,
+    kPicture,
   };
 
   constexpr uint64_t kImage[] = {
