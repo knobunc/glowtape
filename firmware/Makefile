@@ -7,7 +7,7 @@ BOARD=adafruit_feather_rp2040
 
 build/$(PROJECT).uf2: glowtape.cc
 
-glowtape.cc : font-tinytext.c font-6x9.c font-timetext.c
+glowtape.cc : font-message.c font-6x9.c font-timetext.c
 
 flash : build/$(PROJECT).uf2
 	picotool load $<
@@ -24,7 +24,7 @@ disasm: build/$(PROJECT).elf
 # This requires http://github.com/hzeller/bdfont.data to be installed
 # For distribution, we don't depend on %.chars, so that a git cloned project
 # does not need bdfont-data-gen installed and compiles with provided files.
-font-%.c: # %.chars fonts/%.bdf
+font-%.c: %.chars fonts/%.bdf
 	bdfont-data-gen -s fonts/$*.bdf $* -C $*.chars
 
 build:

@@ -19,8 +19,8 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME}
   glowtape.cc
   bdfont-support.c
-  font-tinytext.c
   font-6x9.c
+  font-message.c
   font-timetext.c
 )
 
