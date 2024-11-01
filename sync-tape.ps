@@ -1,19 +1,26 @@
 %!PS-Adobe-3.0
-%%BoundingBox: 0 0 576 792
-%
+%%BoundingBox: 0 0 792 1224
+
+%%BeginSetup
+2 dict begin
+/PageSize 792 1224 2 array astore def
+/ImagingBBox null def
+currentdict end setpagedevice
+%%EndSetup
+
 /mm { 72 25.4 div mul } def
 /" { 72 mul } def
 
 /line-dist 0.8 mm def
-/cut-marks 55 mm def
+/cut-marks 52 mm def
 
 /offset-x 12 mm def
 /offset-y 20 mm def
 
 line-dist 0.5 mul setlinewidth
 
-/height 11 " offset-y 2 mul sub def
-/width 8 " offset-x 2 mul sub def
+/height 17 " offset-y 2 mul sub def
+/width  11 " offset-x 2 mul sub def
 
 % sync line pattern
 0 1 height line-dist div {
@@ -30,4 +37,27 @@ line-dist 0.5 mul setlinewidth
     height offset-y 2 mul add 10 sub moveto
     0 offset-y 2 div neg rlineto stroke
 } for
+
+/Helvetica findfont 8 scalefont setfont
+
+3 mm 160 mm moveto (Scale) show
+3 mm 157 mm moveto (Check) show
+
+0.2 setlinewidth
+offset-x 3 mm sub offset-y moveto
+-1 mm 0 rmoveto  2 mm 0 rlineto -1 mm 0 rmoveto
+offset-x 3 mm sub 5 " lineto
+-1 mm 0 rmoveto  2 mm 0 rlineto -1 mm 0 rmoveto
+
+-1 mm 2 mm rmoveto (5") show
+
+offset-x 6 mm sub offset-y moveto
+-1 mm 0 rmoveto  2 mm 0 rlineto -1 mm 0 rmoveto
+offset-x 6 mm sub 150 mm lineto
+-1 mm 0 rmoveto  2 mm 0 rlineto -1 mm 0 rmoveto
+
+-5 mm 2 mm rmoveto (150mm) show
+
+stroke
+
 showpage
