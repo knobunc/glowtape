@@ -7,7 +7,7 @@ BOARD=adafruit_feather_rp2040
 
 build/$(PROJECT).uf2: glowtape.cc
 
-glowtape.cc : font-message.c font-6x9.c font-timetext.c
+glowtape.cc : font-message.c font-6x9.c font-timetext.c font-large.c
 
 flash : build/$(PROJECT).uf2
 	picotool load $<

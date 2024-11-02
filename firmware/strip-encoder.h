@@ -7,7 +7,7 @@
 #include "pico/time.h"
 
 class StripEncoder {
-  static constexpr int kLEDPin = 13;
+  static constexpr int kLEDPin = 13;  // On Feather board.
   static constexpr int kLineEncoderIn = 7;
   static constexpr int64_t kTimeoutUsec = 500'000;
   static constexpr int64_t kFastTickUsec = 7'000;

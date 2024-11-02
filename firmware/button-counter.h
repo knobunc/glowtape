@@ -8,23 +8,26 @@
 class ButtonCounter {
   static constexpr int kDebounceTimeUsec = 100'000;
  public:
-  ButtonCounter(int pin) : pin_(pin) { gpio_set_dir(pin_, GPIO_IN); }
+  ButtonCounter(int pin) : pin_(pin) {
+    gpio_set_dir(pin_, GPIO_IN);
+    Reset();
+  }
 
   void Poll() {
-    const bool is_pressed = !gpio_get(pin_);
-    const absolute_time_t this_press_time = get_absolute_time();
-    const int64_t usec_diff =
-        absolute_time_diff_us(last_press_time_, this_press_time);
+    const bool is_pressed = !gpio_get(pin_);  // Board-Button has inverted logic
+    const absolute_time_t now = get_absolute_time();
+    const int64_t since_last = absolute_time_diff_us(last_press_time_, now);
 
-    if (!previous_pressed_ && is_pressed && usec_diff > kDebounceTimeUsec) {
+    if (!previous_pressed_ && is_pressed && since_last > kDebounceTimeUsec) {
       ++count_;
-      last_press_time_ = this_press_time;
+      last_press_time_ = now;
     }
+
     previous_pressed_ = is_pressed;
   }
 
   void Reset() {
-    previous_pressed_ = 0;
+    previous_pressed_ = false;
     count_ = 0;
   }
 
@@ -33,7 +36,7 @@ class ButtonCounter {
  private:
   const int pin_;
   int count_ = 0;
-  bool previous_pressed_ = 0;
+  bool previous_pressed_ = false;
   absolute_time_t last_press_time_{};
 };
 

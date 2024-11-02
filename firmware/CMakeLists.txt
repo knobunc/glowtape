@@ -22,6 +22,7 @@ add_executable(${PROJECT_NAME}
   font-6x9.c
   font-message.c
   font-timetext.c
+  font-large.c
 )
 
 # Create map/bin/hex/uf2 files

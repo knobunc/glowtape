@@ -89,6 +89,7 @@ class FramePrinter {
     constexpr int kMaxColumns = sizeof(RowBits_t) * 8;
     if (aspect_type_ == ScreenAspect::kAlongLength) {
       std::swap(x, y);
+      x = 64 - x;
     }
     if (x < 0 || x >= kMaxColumns) {
       return;

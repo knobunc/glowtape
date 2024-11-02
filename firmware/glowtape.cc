@@ -11,14 +11,23 @@
 
 // Generated font data
 #include "font-6x9.h"
-#include "font-timetext.h"
+#include "font-large.h"
 #include "font-message.h"
+#include "font-timetext.h"
 
+// Some demo bitmap content
+#include "bitmap-contents.h"
+
+// Time a single line is flashing the 405nm LEDs.
+constexpr uint16_t kFlashTimeMillis = 5;
+
+// GPIO where the input button lives. The Feathre board has the BOOTSEL button
+/// connected to this GPIO.
 constexpr int kButtonPin = 4;
 
 constexpr int kSpiTxPin = 11;  // TX1, 10=sck1, 9=CS1
-constexpr uint16_t kFlashTimeMillis = 5;
 
+// A simple wrapper to emit bdfont text to out FramePrinter.
 static void WriteText(FramePrinter *out, const struct FontData *font, int xpos,
                       int ypos, const char *print_text,
                       bool right_aligned = false, int extra_space = 0) {
@@ -44,170 +53,12 @@ static void WriteText(FramePrinter *out, const struct FontData *font, int xpos,
   }
 }
 
-// Make writing bitmaps a bit more readable.
-constexpr uint64_t operator""_bitmap(const char *str, size_t) {
-  uint64_t result = 0;
-  for (/**/; *str; ++str) {
-    result |= (*str != ' ');
-    result <<= static_cast<uint64_t>(1);
-  }
-  return result;
-}
-
-// 1 = picture 2 = name, everything else: time
-void CreateContent(FramePrinter *out, int what_content) {
-  enum Content {
-    kTime,
-    kName,
-    kPicture,
-    kProject,
-  };
-
-  out->StartNewImage(ScreenAspect::kAlongWidth);
-
-  constexpr uint64_t kJollyWrencher[] = {
-      "                                                                "_bitmap,
-      "                                                                "_bitmap,
-      "                                                                "_bitmap,
-      "                                                                "_bitmap,
-      "                                                                "_bitmap,
-      "       #####                                      #####         "_bitmap,
-      "        ######                                  ######          "_bitmap,
-      "         ######                                ######           "_bitmap,
-      "           ####                                ####             "_bitmap,
-      "           #####                              #####             "_bitmap,
-      "          ######                              ######            "_bitmap,
-      " #        ######                              ######        #   "_bitmap,
-      " ##      #######                              #######      ##   "_bitmap,
-      " ###    ########                              ########    ###   "_bitmap,
-      " ####  ##########                            ##########  ####   "_bitmap,
-      "  #################                        #################    "_bitmap,
-      "  ##################                      ##################    "_bitmap,
-      "   ##################       ######       ##################     "_bitmap,
-      "    ##################   ############   ##################      "_bitmap,
-      "      ###############  ################  ###############        "_bitmap,
-      "            ########  ##################  ########              "_bitmap,
-      "             ######  #################### #######               "_bitmap,
-      "              ##### ###################### #####                "_bitmap,
-      "               ###  ######################  ###                 "_bitmap,
-      "                 # ######################## ##                  "_bitmap,
-      "                  ##########################                    "_bitmap,
-      "                  ##########################                    "_bitmap,
-      "                  ##########################                    "_bitmap,
-      "                 ############################                   "_bitmap,
-      "                 ######    ########    ######                   "_bitmap,
-      "                 #####      ######      #####                   "_bitmap,
-      "                 ####        ####        ####                   "_bitmap,
-      "                 ####       ######       ####                   "_bitmap,
-      "                 ####      ########      ####                   "_bitmap,
-      "                 ####    ############    ####                   "_bitmap,
-      "                 ####   ##############   ####                   "_bitmap,
-      "                 ##### ################ #####                   "_bitmap,
-      "                 ############## #############                   "_bitmap,
-      "                  ############  ############                    "_bitmap,
-      "                  ############  ############                    "_bitmap,
-      "               ##  ###########  ###########  ##                 "_bitmap,
-      "              #### ######################## ####                "_bitmap,
-      "             #####  ######################  #####               "_bitmap,
-      "            #######  ####################  #######              "_bitmap,
-      "      ############## #################### ##############        "_bitmap,
-      "    #################  ################  #################      "_bitmap,
-      "   ##################  ################  ##################     "_bitmap,
-      "  ##################   ################   ##################    "_bitmap,
-      "  ################     ##### #### #####     ################    "_bitmap,
-      " ####  ##########       ###   ##   ###       ##########  ####   "_bitmap,
-      " ###    ########                              ########    ###   "_bitmap,
-      " ##      #######                              #######      ##   "_bitmap,
-      " #        ######                              ######        #   "_bitmap,
-      "           #####                              #####             "_bitmap,
-      "           #####                              #####             "_bitmap,
-      "          #####                                #####            "_bitmap,
-      "         ######                                ######           "_bitmap,
-      "        ######                                  ######          "_bitmap,
-      "       #####                                      #####         "_bitmap,
-      "                                                                "_bitmap,
-      "                                                                "_bitmap,
-      "                                                                "_bitmap,
-      "                                                                "_bitmap,
-  };
-
-  constexpr uint64_t kProjectQR[] = {
-      "##############  ########  ##        ##############       "_bitmap,
-      "##############  ########  ##        ##############       "_bitmap,
-      "##          ##  ##    ##  ##    ##  ##          ##       "_bitmap,
-      "##          ##  ##    ##  ##    ##  ##          ##       "_bitmap,
-      "##  ######  ##    ##      ####      ##  ######  ##       "_bitmap,
-      "##  ######  ##    ##      ####      ##  ######  ##       "_bitmap,
-      "##  ######  ##        ##########    ##  ######  ##       "_bitmap,
-      "##  ######  ##        ##########    ##  ######  ##       "_bitmap,
-      "##  ######  ##  ##    ########      ##  ######  ##       "_bitmap,
-      "##  ######  ##  ##    ########      ##  ######  ##       "_bitmap,
-      "##          ##  ######  ######      ##          ##       "_bitmap,
-      "##          ##  ######  ######      ##          ##       "_bitmap,
-      "##############  ##  ##  ##  ##  ##  ##############       "_bitmap,
-      "##############  ##  ##  ##  ##  ##  ##############       "_bitmap,
-      "                ####        ######                       "_bitmap,
-      "                ####        ######                       "_bitmap,
-      "######    ####  ####  ####  ##  ##########    ####       "_bitmap,
-      "######    ####  ####  ####  ##  ##########    ####       "_bitmap,
-      "####  ####      ##      ####  ##    ####  ##  ####       "_bitmap,
-      "####  ####      ##      ####  ##    ####  ##  ####       "_bitmap,
-      "##          ##########  ##    ##      ########  ##       "_bitmap,
-      "##          ##########  ##    ##      ########  ##       "_bitmap,
-      "####                ######  ####  ##########             "_bitmap,
-      "####                ######  ####  ##########             "_bitmap,
-      "      ########  ######    ######    ####        ##       "_bitmap,
-      "      ########  ######    ######    ####        ##       "_bitmap,
-      "  ####  ##        ####    ##  ##########      ####       "_bitmap,
-      "  ####  ##        ####    ##  ##########      ####       "_bitmap,
-      "######  ########      ##      ####  ##    ####  ##       "_bitmap,
-      "######  ########      ##      ####  ##    ####  ##       "_bitmap,
-      "    ####  ##    ######    ##    ########                 "_bitmap,
-      "    ####  ##    ######    ##    ########                 "_bitmap,
-      "######      ##  ####  ######    ##########    ##         "_bitmap,
-      "######      ##  ####  ######    ##########    ##         "_bitmap,
-      "                  ##    ##      ##      ##  ##  ##       "_bitmap,
-      "                  ##    ##      ##      ##  ##  ##       "_bitmap,
-      "##############    ##    ######  ##  ##  ####    ##       "_bitmap,
-      "##############    ##    ######  ##  ##  ####    ##       "_bitmap,
-      "##          ##  ##  ######  ######      ##               "_bitmap,
-      "##          ##  ##  ######  ######      ##               "_bitmap,
-      "##  ######  ##      ##    ##################    ##       "_bitmap,
-      "##  ######  ##      ##    ##################    ##       "_bitmap,
-      "##  ######  ##    ##      ######  ##    ########         "_bitmap,
-      "##  ######  ##    ##      ######  ##    ########         "_bitmap,
-      "##  ######  ##  ##  ####        ##      ##    ####       "_bitmap,
-      "##  ######  ##  ##  ####        ##      ##    ####       "_bitmap,
-      "##          ##  ######    ##    ##  ######               "_bitmap,
-      "##          ##  ######    ##    ##  ######               "_bitmap,
-      "##############  ############    ######    ##    ##       "_bitmap,
-      "##############  ############    ######    ##    ##       "_bitmap,
-  };
-
-  if (what_content == kPicture) {
-    for (uint64_t row : kJollyWrencher) {
-      out->push_back(row);
-    }
-    return;
-  }
-
-  if (what_content == kName) {
-    WriteText(out, &font_message, 2, 0, "Henner", false, 2);
-    WriteText(out, &font_message, 62, 15, "Zeller", true, 2);
-    return;
-  }
-
-  if (what_content == kProject) {
-    for (uint64_t row : kProjectQR) {
-      out->push_back(row);
-    }
-    return;
-  }
-
-  // None of the above ? Ok, time then.
+void DrawTime(FramePrinter *out) {
   datetime_t now{};
   const bool time_valid = rtc_get_datetime(&now);
   if (!time_valid) {
+    // RTC of rp2040 is a bit annoying, its content does not survive
+    // resets. To be set with the set-time.sh script.
     WriteText(out, &font_6x9, 2, 0, "Set Time!");
     return;
   }
@@ -230,6 +81,48 @@ void CreateContent(FramePrinter *out, int what_content) {
 
   snprintf(buffer, sizeof(buffer), "%02d:%02d", now.hour, now.min);
   WriteText(out, &font_timetext, 2, 22, buffer);
+}
+
+// Create content, derived from number of button presses before.
+void CreateContent(FramePrinter *out, int what_content) {
+  enum Content {
+    kTime,   // Default: no button presses
+    kName,
+    kJollyWrencher,
+    kSupercon,
+    kProject,
+  };
+
+  out->StartNewImage(ScreenAspect::kAlongWidth);
+
+  if (what_content == kJollyWrencher) {
+    for (uint64_t row : kJollyWrencherBitmap) {
+      out->push_back(row);
+    }
+    return;
+  }
+
+  if (what_content == kName) {
+    WriteText(out, &font_message, 2, 0, "Henner", false, 2);
+    WriteText(out, &font_message, 62, 15, "Zeller", true, 2);
+    return;
+  }
+
+  if (what_content == kSupercon) {
+    out->StartNewImage(ScreenAspect::kAlongLength);
+    WriteText(out, &font_large, 0, 8, "Supercon 8");
+    return;
+  }
+
+  if (what_content == kProject) {
+    for (uint64_t row : kProjectQRBitmap) {
+      out->push_back(row);
+    }
+    return;
+  }
+
+  // None of the above ? Ok, time then.
+  DrawTime(out);
 }
 
 static void TimeSetter(const char *value, size_t) {
