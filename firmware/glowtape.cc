@@ -125,7 +125,7 @@ void CreateContent(FramePrinter *out, int what_content) {
   DrawTime(out);
 }
 
-static void TimeSetter(const char *value, size_t) {
+static void TimeSetter(const char *value) {
   int year, month, day, hour, min, sec, day_of_week;
   int count = sscanf(value, "%d-%d-%d %d:%d:%d %d\n", &year, &month, &day,
                      &hour, &min, &sec, &day_of_week);

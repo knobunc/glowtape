@@ -7,7 +7,8 @@ BOARD=adafruit_feather_rp2040
 
 build/$(PROJECT).uf2: glowtape.cc
 
-glowtape.cc : font-message.c font-6x9.c font-timetext.c font-large.c
+glowtape.cc : bdfont-support.h \
+              font-message.c font-6x9.c font-timetext.c font-large.c
 
 flash : build/$(PROJECT).uf2
 	picotool load $<
@@ -24,12 +25,15 @@ disasm: build/$(PROJECT).elf
 # This requires http://github.com/hzeller/bdfont.data to be installed
 # (provided already from the shell.nix)
 font-%.c: %.chars fonts/%.bdf
-	bdfont-data-gen -s fonts/$*.bdf $* -C $*.chars
+	bdfont-data-gen fonts/$*.bdf $* -C $*.chars
+
+bdfont-support.h:
+	bdfont-data-gen -s
 
 build:
 	cmake -B build -DCMAKE_VERBOSE_MAKEFILE=OFF -DPICO_BOARD=$(BOARD)
 
 clean:
-	rm -rf build
+	rm -rf build bdfont-support.{h,c} font-*.{h,c}
 
 FORCE:

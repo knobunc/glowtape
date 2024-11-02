@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <bit>
+#include <cstdint>
 
 #include "hardware/gpio.h"
 #include "hardware/spi.h"

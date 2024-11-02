@@ -8,25 +8,23 @@
 
 template <size_t kBufferSize>
 class LineReader {
-  using LineProcessor = std::function<void(const char *line, size_t len)>;
+  using LineProcessor = std::function<void(const char *line)>;
 
  public:
   LineReader(const LineProcessor &line_processor)
-      : pos_(buf_), end_(buf_ + sizeof(buf_)), callback_(line_processor) {}
+      : pos_(buf_), end_(buf_ + sizeof(buf_)), callback_(line_processor) {
+    static_assert(kBufferSize > 0);
+  }
 
   void Poll() {
     const int maybe_char = getchar_timeout_us(0);
     if (maybe_char < 0) return;
-    putchar(maybe_char);
+    putchar(maybe_char);  // echo
     *pos_++ = (char)maybe_char;
     const bool is_eol = (maybe_char == '\r' || maybe_char == '\n');
     if (is_eol || pos_ >= end_) {
-      if (is_eol) {
-        *(pos_ - 1) = '\0';  // Don't want newline.
-      } else {
-        *pos_ = '\0';
-      }
-      callback_(buf_, pos_ - buf_);
+      *(pos_ - 1) = '\0';  // Don't want newline; if buffer overflow: terminate.
+      callback_(buf_);
       pos_ = buf_;
     }
   }
