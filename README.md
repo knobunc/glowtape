@@ -11,7 +11,7 @@ Mostly openscad, rp2040 sdk,
 [gcode-cli](https://github.com/hzeller/gcode-cli) used in the utility to set
 time.
 
-  * OpenSCAD case ![Render](../img/strip-case.png)
+  * OpenSCAD case ![Render](img/strip-case.png)
   * [firmware/](./firmware/)
   * [Gloxwls PCB](http://glowxels.org). Check out the 'narrow' branch.
   * [Encoder PCB](./pcb/encoder/) to pick up the encoder tape.
