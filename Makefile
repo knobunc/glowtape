@@ -1,7 +1,7 @@
-all: fab/sync-tape.pdf
+all: sync-tape.pdf
 
-fab/%.pdf : %.ps
+%.pdf : %.ps
 	ps2pdf $< $@
 
 clean:
-	rm -f fab/sync-tape.pdf
+	rm -f sync-tape.pdf
