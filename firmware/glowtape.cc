@@ -86,7 +86,7 @@ void DrawTime(FramePrinter *out) {
 // Create content, derived from number of button presses before.
 void CreateContent(FramePrinter *out, int what_content) {
   enum Content {
-    kTime,   // Default: no button presses
+    kTime,  // Default: no button presses
     kName,
     kJollyWrencher,
     kSupercon,
