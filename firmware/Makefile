@@ -22,8 +22,7 @@ disasm: build/$(PROJECT).elf
 	$(TOOLCHAIN_PREFIX)objdump -C -S build/$(PROJECT).elf
 
 # This requires http://github.com/hzeller/bdfont.data to be installed
-# For distribution, we don't depend on %.chars, so that a git cloned project
-# does not need bdfont-data-gen installed and compiles with provided files.
+# (provided already from the shell.nix)
 font-%.c: %.chars fonts/%.bdf
 	bdfont-data-gen -s fonts/$*.bdf $* -C $*.chars
 
