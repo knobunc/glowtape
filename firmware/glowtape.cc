@@ -21,8 +21,8 @@
 // Time a single line is flashing the 405nm LEDs.
 constexpr uint16_t kFlashTimeMillis = 5;
 
-// GPIO where the input button lives. The Feathre board has the BOOTSEL button
-/// connected to this GPIO.
+// GPIO where the input button lives. The Feather board has the BOOTSEL button
+// connected to this GPIO.
 constexpr int kButtonPin = 4;
 
 constexpr int kSpiTxPin = 11;  // TX1, 10=sck1, 9=CS1
@@ -184,7 +184,7 @@ int main() {
         break;
 
       case StripEncoder::Result::kTick:
-        ++forward_steps;
+        ++forward_steps;  // Want to see first if consistent stream of ticks.
         if (forward_steps > 4 && fast_steps < 4 && printer.SendNext()) {
           printer.LightFlash(kFlashTimeMillis);
         }
