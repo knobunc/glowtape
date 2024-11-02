@@ -1,0 +1,13 @@
+*~
+fab/
+build/
+fp-info-cache
+encoder-backups/
+encoder-fab.zip
+.envrc
+sync-tape.pdf
+
+# Generated
+font-*.c
+font-*.h
+bdfont-support.*

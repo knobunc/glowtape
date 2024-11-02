@@ -22,6 +22,7 @@ build/$(PROJECT).uf2 build/$(PROJECT).elf: build FORCE
 disasm: build/$(PROJECT).elf
 	$(TOOLCHAIN_PREFIX)objdump -C -S build/$(PROJECT).elf
 
+# -- the following should be done in cmake
 # This requires http://github.com/hzeller/bdfont.data to be installed
 # (provided already from the shell.nix)
 font-%.c: %.chars fonts/%.bdf
