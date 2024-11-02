@@ -60,9 +60,12 @@ void CreateContent(FramePrinter *out, int what_content) {
     kTime,
     kName,
     kPicture,
+    kProject,
   };
 
-  constexpr uint64_t kImage[] = {
+  out->StartNewImage(ScreenAspect::kAlongWidth);
+
+  constexpr uint64_t kJollyWrencher[] = {
       "                                                                "_bitmap,
       "                                                                "_bitmap,
       "                                                                "_bitmap,
@@ -128,10 +131,61 @@ void CreateContent(FramePrinter *out, int what_content) {
       "                                                                "_bitmap,
   };
 
-  out->StartNewImage(ScreenAspect::kAlongWidth);
+  constexpr uint64_t kProjectQR[] = {
+      "##############  ########  ##        ##############       "_bitmap,
+      "##############  ########  ##        ##############       "_bitmap,
+      "##          ##  ##    ##  ##    ##  ##          ##       "_bitmap,
+      "##          ##  ##    ##  ##    ##  ##          ##       "_bitmap,
+      "##  ######  ##    ##      ####      ##  ######  ##       "_bitmap,
+      "##  ######  ##    ##      ####      ##  ######  ##       "_bitmap,
+      "##  ######  ##        ##########    ##  ######  ##       "_bitmap,
+      "##  ######  ##        ##########    ##  ######  ##       "_bitmap,
+      "##  ######  ##  ##    ########      ##  ######  ##       "_bitmap,
+      "##  ######  ##  ##    ########      ##  ######  ##       "_bitmap,
+      "##          ##  ######  ######      ##          ##       "_bitmap,
+      "##          ##  ######  ######      ##          ##       "_bitmap,
+      "##############  ##  ##  ##  ##  ##  ##############       "_bitmap,
+      "##############  ##  ##  ##  ##  ##  ##############       "_bitmap,
+      "                ####        ######                       "_bitmap,
+      "                ####        ######                       "_bitmap,
+      "######    ####  ####  ####  ##  ##########    ####       "_bitmap,
+      "######    ####  ####  ####  ##  ##########    ####       "_bitmap,
+      "####  ####      ##      ####  ##    ####  ##  ####       "_bitmap,
+      "####  ####      ##      ####  ##    ####  ##  ####       "_bitmap,
+      "##          ##########  ##    ##      ########  ##       "_bitmap,
+      "##          ##########  ##    ##      ########  ##       "_bitmap,
+      "####                ######  ####  ##########             "_bitmap,
+      "####                ######  ####  ##########             "_bitmap,
+      "      ########  ######    ######    ####        ##       "_bitmap,
+      "      ########  ######    ######    ####        ##       "_bitmap,
+      "  ####  ##        ####    ##  ##########      ####       "_bitmap,
+      "  ####  ##        ####    ##  ##########      ####       "_bitmap,
+      "######  ########      ##      ####  ##    ####  ##       "_bitmap,
+      "######  ########      ##      ####  ##    ####  ##       "_bitmap,
+      "    ####  ##    ######    ##    ########                 "_bitmap,
+      "    ####  ##    ######    ##    ########                 "_bitmap,
+      "######      ##  ####  ######    ##########    ##         "_bitmap,
+      "######      ##  ####  ######    ##########    ##         "_bitmap,
+      "                  ##    ##      ##      ##  ##  ##       "_bitmap,
+      "                  ##    ##      ##      ##  ##  ##       "_bitmap,
+      "##############    ##    ######  ##  ##  ####    ##       "_bitmap,
+      "##############    ##    ######  ##  ##  ####    ##       "_bitmap,
+      "##          ##  ##  ######  ######      ##               "_bitmap,
+      "##          ##  ##  ######  ######      ##               "_bitmap,
+      "##  ######  ##      ##    ##################    ##       "_bitmap,
+      "##  ######  ##      ##    ##################    ##       "_bitmap,
+      "##  ######  ##    ##      ######  ##    ########         "_bitmap,
+      "##  ######  ##    ##      ######  ##    ########         "_bitmap,
+      "##  ######  ##  ##  ####        ##      ##    ####       "_bitmap,
+      "##  ######  ##  ##  ####        ##      ##    ####       "_bitmap,
+      "##          ##  ######    ##    ##  ######               "_bitmap,
+      "##          ##  ######    ##    ##  ######               "_bitmap,
+      "##############  ############    ######    ##    ##       "_bitmap,
+      "##############  ############    ######    ##    ##       "_bitmap,
+  };
 
   if (what_content == kPicture) {
-    for (uint64_t row : kImage) {
+    for (uint64_t row : kJollyWrencher) {
       out->push_back(row);
     }
     return;
@@ -140,6 +194,13 @@ void CreateContent(FramePrinter *out, int what_content) {
   if (what_content == kName) {
     WriteText(out, &font_message, 2, 0, "Henner", false, 2);
     WriteText(out, &font_message, 62, 15, "Zeller", true, 2);
+    return;
+  }
+
+  if (what_content == kProject) {
+    for (uint64_t row : kProjectQR) {
+      out->push_back(row);
+    }
     return;
   }
 

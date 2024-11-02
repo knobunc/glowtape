@@ -10,7 +10,7 @@ class StripEncoder {
   static constexpr int kLEDPin = 13;
   static constexpr int kLineEncoderIn = 7;
   static constexpr int64_t kTimeoutUsec = 500'000;
-  static constexpr int64_t kFastTickUsec = 10'000;
+  static constexpr int64_t kFastTickUsec = 7'000;
 
  public:
   enum class Result {
