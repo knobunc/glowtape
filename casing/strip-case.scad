@@ -1,3 +1,5 @@
+// Note, this still needs cleanup.
+
 use <bezier.scad>
 
 $fn=60;
@@ -49,7 +51,7 @@ module rp2040_simple() {
   translate([-50.8/2, 0, 0]) cube([50.8, 23, 4.8]);
   hull() {
     translate([-22, 8.4, 3.1]) usb();  // actual location
-    translate([-22, 8.4, 5]) usb();     // punch-out help
+    translate([-22, 8.4, 5]) usb();    // punch-out help
   }
 }
 
@@ -220,7 +222,6 @@ module track() {
   }
 }
 
-
 module assembly() {
   color("yellow") track();
   translate([0, 0, tape_thick]) {
@@ -230,16 +231,4 @@ module assembly() {
   translate([0, 0, window_elevate]) window();
 }
 
-//assembly();
-//base_case_print();
-track();
-//pcb_arrangement();
-
-//translate([-tape_width/2, 0, 0]) side_wall();
-//track2();
-//track_bottom();
-//track();
-//glowxel_pcb();
-
-//translate([0, 0, -3.6]) encoder();
-//strip_led_light();
+assembly();
