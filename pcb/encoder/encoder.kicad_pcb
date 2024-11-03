@@ -97,7 +97,7 @@
 		(descr "Through hole straight socket strip, 1x03, 1.27mm pitch, single row (from Kicad 4.0.7), script generated")
 		(tags "Through hole socket strip THT 1x03 1.27mm single row")
 		(property "Reference" "J2"
-			(at -0.05 -3.35 360)
+			(at -0.05 -3.35 0)
 			(layer "F.SilkS")
 			(uuid "120dddbb-13ac-4260-8c40-7ccf9df6f1d6")
 			(effects
@@ -108,7 +108,7 @@
 			)
 		)
 		(property "Value" "Conn_01x03_Pin"
-			(at 0 4.675 360)
+			(at 0 4.675 0)
 			(layer "F.Fab")
 			(uuid "c3ab9e1e-1f81-4b48-90e2-817e5d100e64")
 			(effects
@@ -377,6 +377,7 @@
 			(uuid "699ff289-6f3f-4c91-8366-6a2fc311d721")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Connector_PinSocket_1.27mm.3dshapes/PinSocket_1x03_P1.27mm_Vertical.wrl"
+			(hide yes)
 			(offset
 				(xyz 0 0 0)
 			)
@@ -395,7 +396,7 @@
 		(descr "LED SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "Q2"
-			(at -0.1375 -1.48 360)
+			(at -0.1375 -1.48 0)
 			(layer "F.SilkS")
 			(uuid "073f3a1e-d6a2-41f1-acff-daa8ae290635")
 			(effects
@@ -406,7 +407,7 @@
 			)
 		)
 		(property "Value" "B19H1PT"
-			(at 0 1.43 360)
+			(at 0 1.43 0)
 			(layer "F.Fab")
 			(uuid "eccbf9c4-e5fb-4a01-8a61-e619b1bc3ad6")
 			(effects
@@ -580,7 +581,7 @@
 			(uuid "ec96b40a-7fdf-4dd3-a115-bb87482a6f16")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "ecf91c22-adb8-4a82-a881-bbd058391d9e")
 			(effects
@@ -996,7 +997,7 @@
 		(descr "LED SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D1"
-			(at 0 -1.43 360)
+			(at 0 -1.43 0)
 			(layer "F.SilkS")
 			(uuid "d5a11a25-4bfd-40e1-b507-3bfc043d1804")
 			(effects
@@ -1007,7 +1008,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 0 1.43 360)
+			(at 0 1.43 0)
 			(layer "F.Fab")
 			(uuid "c0d4e78d-d38b-4d9b-a8aa-a799ac32bd90")
 			(effects
@@ -1182,7 +1183,7 @@
 			(uuid "9a3da4ca-7f6e-4760-b9f1-86b3396ee4b3")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "33e45e1e-6101-4197-9ad9-6998ad67abd7")
 			(effects
@@ -1444,7 +1445,7 @@
 		(descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R9"
-			(at 2.475 0 90)
+			(at 0.0334 -1.385 180)
 			(layer "F.SilkS")
 			(uuid "4bfa22fe-ae98-495e-8dcb-954b4fef1281")
 			(effects
@@ -1455,7 +1456,7 @@
 			)
 		)
 		(property "Value" "R"
-			(at 0 1.43 360)
+			(at 0 1.43 0)
 			(layer "F.Fab")
 			(uuid "5076dbde-73a5-4cb7-a5d2-5d5586f15087")
 			(effects
@@ -1610,7 +1611,7 @@
 			(uuid "7e372dfa-ca81-4fbe-a259-e0f60dd35594")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "b4c5f2d2-b6e3-4f20-9a15-a6490c531371")
 			(effects
@@ -1657,7 +1658,7 @@
 		(descr "Through hole straight socket strip, 1x03, 1.27mm pitch, single row (from Kicad 4.0.7), script generated")
 		(tags "Through hole socket strip THT 1x03 1.27mm single row")
 		(property "Reference" "J1"
-			(at -0.1 -3.225 360)
+			(at -0.1 -3.225 0)
 			(layer "F.SilkS")
 			(uuid "79287f17-30b1-4649-9706-52d108cd49c6")
 			(effects
@@ -1668,7 +1669,7 @@
 			)
 		)
 		(property "Value" "Conn_01x03_Pin"
-			(at 0 4.675 360)
+			(at 0 4.675 0)
 			(layer "F.Fab")
 			(uuid "b8464fd3-3910-4191-90be-ac9861284f68")
 			(effects
@@ -1937,6 +1938,7 @@
 			(uuid "41bc99f2-737e-4028-a3dc-339131a5c65c")
 		)
 		(model "${KICAD8_3DMODEL_DIR}/Connector_PinSocket_1.27mm.3dshapes/PinSocket_1x03_P1.27mm_Vertical.wrl"
+			(hide yes)
 			(offset
 				(xyz 0 0 0)
 			)
@@ -1955,7 +1957,7 @@
 		(descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R1"
-			(at 0.625 1.33 360)
+			(at 0.625 1.33 0)
 			(layer "F.SilkS")
 			(uuid "8420a394-254b-42b0-a64b-e7519cace8c0")
 			(effects
@@ -1966,7 +1968,7 @@
 			)
 		)
 		(property "Value" "R"
-			(at 0 1.43 360)
+			(at 0 1.43 0)
 			(layer "F.Fab")
 			(uuid "f37d7db0-a2ce-41bb-9fbc-b151fb0e1f82")
 			(effects
@@ -2121,7 +2123,7 @@
 			(uuid "aa10036c-460f-485b-8253-1a840f99686b")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "70676033-8d1d-4836-96e0-4ac50f828433")
 			(effects
@@ -2168,7 +2170,7 @@
 		(descr "LED SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D2"
-			(at -0.0625 1.4 360)
+			(at -0.0625 1.4 0)
 			(layer "F.SilkS")
 			(uuid "e60c4ca8-e6be-4346-ad5e-8ce61ddbd826")
 			(effects
@@ -2179,7 +2181,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 0 1.43 360)
+			(at 0 1.43 0)
 			(layer "F.Fab")
 			(uuid "1fea4d01-ce2a-4848-8464-ed1298b9b4c6")
 			(effects
@@ -2354,7 +2356,7 @@
 			(uuid "b663ad95-ec5c-4fb4-b343-b90bc876dc74")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "c31d251c-191c-4d03-96b2-e564fcaf28f5")
 			(effects
@@ -2403,7 +2405,7 @@
 		(descr "LED SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf), generated with kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "Q1"
-			(at 0.0375 1.52 360)
+			(at 0.0375 1.52 0)
 			(layer "F.SilkS")
 			(uuid "4ed724ee-1eb4-42a6-a08b-ef8b768e5d85")
 			(effects
@@ -2414,7 +2416,7 @@
 			)
 		)
 		(property "Value" "B19H1PT"
-			(at 0 1.43 360)
+			(at 0 1.43 0)
 			(layer "F.Fab")
 			(uuid "83699d7d-4196-408e-a664-bd271c735a27")
 			(effects
@@ -2588,7 +2590,7 @@
 			(uuid "858a1c2a-5b16-420d-8d93-a1fbdbcacb73")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "ef8b9202-d693-413a-bf9c-20d5aec0cc69")
 			(effects
@@ -2850,7 +2852,7 @@
 		(descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R2"
-			(at 0.175 1.33 360)
+			(at 0.175 1.33 0)
 			(layer "F.SilkS")
 			(uuid "a51b4e54-c72a-4004-af55-f7222ff89b9e")
 			(effects
@@ -2861,7 +2863,7 @@
 			)
 		)
 		(property "Value" "R"
-			(at 0 1.43 360)
+			(at 0 1.43 0)
 			(layer "F.Fab")
 			(uuid "280ddc7f-7554-4553-9194-ce2de5c3184d")
 			(effects
@@ -3016,7 +3018,7 @@
 			(uuid "1b769023-702c-4cd3-87eb-9b28057fdd7f")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "675a3c0b-ae23-4144-95a5-2a894bb8d3e6")
 			(effects

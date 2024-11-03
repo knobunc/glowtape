@@ -1429,7 +1429,7 @@
 	)
 	(wire
 		(pts
-			(xy 34.29 53.34) (xy 34.29 69.85)
+			(xy 34.29 53.34) (xy 34.29 55.88)
 		)
 		(stroke
 			(width 0)
@@ -1539,7 +1539,7 @@
 	)
 	(wire
 		(pts
-			(xy 34.29 128.27) (xy 34.29 132.08)
+			(xy 34.29 74.93) (xy 34.29 78.74)
 		)
 		(stroke
 			(width 0)
@@ -1549,7 +1549,7 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 107.95) (xy 114.3 107.95)
+			(xy 110.49 93.98) (xy 114.3 93.98)
 		)
 		(stroke
 			(width 0)
@@ -1639,7 +1639,7 @@
 	)
 	(wire
 		(pts
-			(xy 109.22 113.03) (xy 114.3 113.03)
+			(xy 109.22 99.06) (xy 114.3 99.06)
 		)
 		(stroke
 			(width 0)
@@ -1719,7 +1719,7 @@
 	)
 	(wire
 		(pts
-			(xy 34.29 77.47) (xy 34.29 120.65)
+			(xy 34.29 63.5) (xy 34.29 67.31)
 		)
 		(stroke
 			(width 0)
@@ -1749,7 +1749,7 @@
 	)
 	(wire
 		(pts
-			(xy 109.22 110.49) (xy 114.3 110.49)
+			(xy 109.22 96.52) (xy 114.3 96.52)
 		)
 		(stroke
 			(width 0)
@@ -1757,7 +1757,7 @@
 		)
 		(uuid "f599afda-a28d-4920-8531-d4b4e7bde4ef")
 	)
-	(text "Differential Light-Sensor 1"
+	(text "Differential Light-Sensor"
 		(exclude_from_sim no)
 		(at 74.422 40.132 0)
 		(effects
@@ -1921,7 +1921,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 109.22 113.03 0)
+		(at 109.22 99.06 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1929,7 +1929,7 @@
 		(dnp no)
 		(uuid "1628e72c-abc0-418b-979b-60368a67a64e")
 		(property "Reference" "#PWR09"
-			(at 109.22 119.38 0)
+			(at 109.22 105.41 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1938,7 +1938,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 109.22 118.11 0)
+			(at 109.22 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1946,7 +1946,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 109.22 113.03 0)
+			(at 109.22 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1955,7 +1955,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 109.22 113.03 0)
+			(at 109.22 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1964,7 +1964,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 109.22 113.03 0)
+			(at 109.22 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2311,7 +2311,7 @@
 	)
 	(symbol
 		(lib_id "power:VCC")
-		(at 109.22 110.49 90)
+		(at 109.22 96.52 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2319,7 +2319,7 @@
 		(dnp no)
 		(uuid "7118c0ee-072b-4ae3-b825-d341a0be7a49")
 		(property "Reference" "#PWR06"
-			(at 113.03 110.49 0)
+			(at 113.03 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2328,7 +2328,7 @@
 			)
 		)
 		(property "Value" "VCC"
-			(at 103.632 110.49 90)
+			(at 103.632 96.52 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2336,7 +2336,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 109.22 110.49 0)
+			(at 109.22 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2345,7 +2345,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 109.22 110.49 0)
+			(at 109.22 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2354,7 +2354,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"VCC\""
-			(at 109.22 110.49 0)
+			(at 109.22 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2924,25 +2924,25 @@
 			(uuid "ee964506-754e-4f0a-a3d9-6003b43ec840")
 		)
 		(pin "8"
-			(uuid "f4ef82f9-8a2f-430e-987b-b1e5ee62c138")
+			(uuid "f4ef82f9-8a2f-430e-987b-b1e5ee62c13a")
 		)
 		(pin "4"
-			(uuid "5a1cdefe-1de3-410f-9249-18f737f70bc8")
+			(uuid "5a1cdefe-1de3-410f-9249-18f737f70bca")
 		)
 		(pin "3"
 			(uuid "65526f37-b1dc-47f4-81e6-5504a77f25e4")
 		)
 		(pin "5"
-			(uuid "ad5fdca9-80d5-44bc-bfe6-8c6ad9a0434a")
+			(uuid "ad5fdca9-80d5-44bc-bfe6-8c6ad9a0434c")
 		)
 		(pin "6"
-			(uuid "065e651f-329b-491f-8c08-79e7087025ea")
+			(uuid "065e651f-329b-491f-8c08-79e7087025ec")
 		)
 		(pin "2"
 			(uuid "c0e91cb8-ce65-4e5d-88ee-47cb8d8d6e1a")
 		)
 		(pin "7"
-			(uuid "8787a776-700d-4f3c-8639-e4dfce40f65a")
+			(uuid "8787a776-700d-4f3c-8639-e4dfce40f65c")
 		)
 		(instances
 			(project "encoder"
@@ -2955,7 +2955,7 @@
 	)
 	(symbol
 		(lib_id "Device:LED")
-		(at 34.29 124.46 90)
+		(at 34.29 71.12 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2964,7 +2964,7 @@
 		(fields_autoplaced yes)
 		(uuid "b4e61019-30ed-474c-ac02-d441b0fabf0f")
 		(property "Reference" "D1"
-			(at 38.1 124.7774 90)
+			(at 38.1 71.4374 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2973,7 +2973,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 38.1 127.3174 90)
+			(at 38.1 73.9774 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2982,7 +2982,7 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
-			(at 34.29 124.46 0)
+			(at 34.29 71.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2991,7 +2991,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 34.29 124.46 0)
+			(at 34.29 71.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3000,7 +3000,7 @@
 			)
 		)
 		(property "Description" "Light emitting diode"
-			(at 34.29 124.46 0)
+			(at 34.29 71.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3161,7 +3161,7 @@
 	)
 	(symbol
 		(lib_id "Connector:Conn_01x03_Pin")
-		(at 119.38 110.49 0)
+		(at 119.38 96.52 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
@@ -3170,7 +3170,7 @@
 		(dnp no)
 		(uuid "cb752fc3-eed1-4035-81f4-234d4014a273")
 		(property "Reference" "J2"
-			(at 120.65 111.7601 0)
+			(at 120.65 97.7901 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3179,7 +3179,7 @@
 			)
 		)
 		(property "Value" "Conn_01x03_Pin"
-			(at 120.65 109.2201 0)
+			(at 120.65 95.2501 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3188,7 +3188,7 @@
 			)
 		)
 		(property "Footprint" "Connector_PinSocket_1.27mm:PinSocket_1x03_P1.27mm_Vertical"
-			(at 119.38 110.49 0)
+			(at 119.38 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3197,7 +3197,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 119.38 110.49 0)
+			(at 119.38 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3206,7 +3206,7 @@
 			)
 		)
 		(property "Description" "Generic connector, single row, 01x03, script generated"
-			(at 119.38 110.49 0)
+			(at 119.38 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3234,7 +3234,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 34.29 132.08 0)
+		(at 34.29 78.74 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3243,7 +3243,7 @@
 		(fields_autoplaced yes)
 		(uuid "cc7df449-c492-4471-9c4a-10246370382a")
 		(property "Reference" "#PWR01"
-			(at 34.29 138.43 0)
+			(at 34.29 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3252,7 +3252,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 34.29 137.16 0)
+			(at 34.29 83.82 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3260,7 +3260,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 34.29 132.08 0)
+			(at 34.29 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3269,7 +3269,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 34.29 132.08 0)
+			(at 34.29 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3278,7 +3278,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 34.29 132.08 0)
+			(at 34.29 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3369,7 +3369,7 @@
 	)
 	(symbol
 		(lib_id "Device:LED")
-		(at 34.29 73.66 90)
+		(at 34.29 59.69 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3378,7 +3378,7 @@
 		(fields_autoplaced yes)
 		(uuid "d83f9f4b-5495-4910-9f7b-9a86f1af8208")
 		(property "Reference" "D2"
-			(at 38.1 73.9774 90)
+			(at 38.1 60.0074 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3387,7 +3387,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 38.1 76.5174 90)
+			(at 38.1 62.5474 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3396,7 +3396,7 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
-			(at 34.29 73.66 0)
+			(at 34.29 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3405,7 +3405,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 34.29 73.66 0)
+			(at 34.29 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3414,7 +3414,7 @@
 			)
 		)
 		(property "Description" "Light emitting diode"
-			(at 34.29 73.66 0)
+			(at 34.29 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
