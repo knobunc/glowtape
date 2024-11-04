@@ -16,10 +16,6 @@ constexpr uint64_t operator""_bitmap(const char *str, size_t) {
 
 constexpr uint64_t kJollyWrencherBitmap[] = {
     "                                                                "_bitmap,
-    "                                                                "_bitmap,
-    "                                                                "_bitmap,
-    "                                                                "_bitmap,
-    "                                                                "_bitmap,
     "       #####                                      #####         "_bitmap,
     "        ######                                  ######          "_bitmap,
     "         ######                                ######           "_bitmap,
@@ -74,10 +70,6 @@ constexpr uint64_t kJollyWrencherBitmap[] = {
     "         ######                                ######           "_bitmap,
     "        ######                                  ######          "_bitmap,
     "       #####                                      #####         "_bitmap,
-    "                                                                "_bitmap,
-    "                                                                "_bitmap,
-    "                                                                "_bitmap,
-    "                                                                "_bitmap,
 };
 
 constexpr uint64_t kProjectQRBitmap[] = {

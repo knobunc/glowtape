@@ -17,7 +17,7 @@ flash : build/$(PROJECT).uf2
 build/$(PROJECT).uf2 build/$(PROJECT).elf: build FORCE
 	$(MAKE) -C build
 	$(TOOLCHAIN_PREFIX)size build/$(PROJECT).elf
-	$(TOOLCHAIN_PREFIX)nm --print-size --size-sort --radix=d build/$(PROJECT).elf | awk '{printf("%5d %s\n", $$2, $$4);}' | sort -nr | head -20
+	$(TOOLCHAIN_PREFIX)nm -C --print-size --size-sort --radix=d build/$(PROJECT).elf | sort -nr -k2 | head -20
 
 disasm: build/$(PROJECT).elf
 	$(TOOLCHAIN_PREFIX)objdump -C -S build/$(PROJECT).elf
@@ -32,7 +32,7 @@ bdfont-support.h:
 	bdfont-data-gen -s
 
 build:
-	cmake -B build -DCMAKE_VERBOSE_MAKEFILE=OFF -DPICO_BOARD=$(BOARD)
+	cmake -B build -DPICO_BOARD=$(BOARD)
 
 clean:
 	rm -rf build bdfont-support.{h,c} font-*.{h,c}
