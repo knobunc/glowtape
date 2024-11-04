@@ -10,6 +10,8 @@ project(glowtape
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 23)
+set(PICO_CXX_ENABLE_EXCEPTIONS OFF)
+set(PICO_CXX_ENABLE_RTTI OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)  # Get compilation DB
 
 # initialize the Raspberry Pi Pico SDK
@@ -29,9 +31,11 @@ add_executable(${PROJECT_NAME}
 pico_add_extra_outputs(${PROJECT_NAME})
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Werror)
-# Link to pico_stdlib (gpio, time, etc. functions)
+
+# Various pico libraries needed.
 target_link_libraries(${PROJECT_NAME}
   pico_stdlib
+  pico_printf
   pico_time
   hardware_rtc
   hardware_spi

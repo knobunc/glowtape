@@ -130,9 +130,7 @@ static void TimeSetter(const char *value) {
   int count = sscanf(value, "%d-%d-%d %d:%d:%d %d\n", &year, &month, &day,
                      &hour, &min, &sec, &day_of_week);
   if (count != 7) {
-    printf(
-        "Error: expected YYYY-MM-DD hh:mm:ss dow\n"
-        "With dow: 0=SUN 1=MON 2=TUE 3=WED 4=THU 5=FRI 6=SUN\n");
+    printf("Error: expected YYYY-MM-DD hh:mm:ss dow\nDow: 0=SUN ... 6=SAT\n");
     return;
   }
 
