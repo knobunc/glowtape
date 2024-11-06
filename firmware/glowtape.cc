@@ -64,13 +64,13 @@ void DrawTime(FramePrinter *out) {
   }
   const char *weekday = "-";
   switch (now.dotw) {
-    case 0: weekday = "Sun"; break;
-    case 1: weekday = "Mon"; break;
-    case 2: weekday = "Tue"; break;
-    case 3: weekday = "Wed"; break;
-    case 4: weekday = "Thu"; break;
-    case 5: weekday = "Fri"; break;
-    case 6: weekday = "Sat"; break;
+    case 0: weekday = "Sunday"; break;
+    case 1: weekday = "Monday"; break;
+    case 2: weekday = "Tuesday"; break;
+    case 3: weekday = "Wednesday"; break;
+    case 4: weekday = "Thursday"; break;
+    case 5: weekday = "Friday"; break;
+    case 6: weekday = "Saturday"; break;
   }
   WriteText(out, &font_6x9, 62, 0, weekday, true);
 
