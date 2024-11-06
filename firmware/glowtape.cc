@@ -75,7 +75,7 @@ void DrawTime(FramePrinter *out) {
   WriteText(out, &font_6x9, 62, 0, weekday, true);
 
   char buffer[32];
-  snprintf(buffer, sizeof(buffer), "%4d %02d %02d", now.year, now.month,
+  snprintf(buffer, sizeof(buffer), "%4d-%02d-%02d", now.year, now.month,
            now.day);
   WriteText(out, &font_6x9, 2, 10, buffer);
 

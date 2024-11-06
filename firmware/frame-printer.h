@@ -2,7 +2,6 @@
 #define FRAME_PRINTER_H
 
 #include <algorithm>
-#include <bit>
 #include <cstdint>
 
 #include "hardware/gpio.h"
@@ -119,13 +118,13 @@ class FramePrinter {
 
   size_t size() const { return row_end_; }
 
- private:
   void SendData(RowBits_t value) {
     // rp2040 stores things in LE, but we
-    RowBits_t big_endian = std::byteswap(value);  // rp2040 is LE
+    RowBits_t big_endian = __builtin_bswap64(value);  // rp2040 is LE
     spi_write_blocking(instance_, (uint8_t *)&big_endian, sizeof(big_endian));
   }
 
+ private:
   // Get column-offset and shift layoyt ready bits.
   RowBits_t assembleLedDataAt(int row) { return MapToPhysical(BitsAtRow(row)); }
 
