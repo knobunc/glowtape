@@ -24,7 +24,7 @@ used in the [set-time utility](./set-time.sh).
     the hand-written PostScript. Print on a high-resolution printer
     (e.g. 1200dpi) to minimize line-thickness variations due to aliasing.
   * Also some glow-in-dark tape that you can find in a hardware store, e.g.
-    soemthing like [this](https://www.amazon.com/gp/product/B076BMQHXB)
+    something like [this](https://www.amazon.com/gp/product/B076BMQHXB)
     (no affiliation).
 
 The RP2040 RTC does not remember its time after a reset (meh), so you need to
